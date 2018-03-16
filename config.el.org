@@ -1,0 +1,70 @@
+* Disable top bar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+#+END_SRC
+
+* Packages
+# (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+# (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
+# (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+#+END_SRC
+
+
+* Evil
+# #+BEGIN_SRC emacs-lisp
+# (use-package evil
+#   :demand)
+# #+END_SRC
+
+
+# #+BEGIN_SRC emacs-lisp
+# # (use-package evil
+# #   :ensure t
+# #   :config
+# #   ;; Make Evil's point behave more like Emacs'
+# #   (setq evil-want-change-word-to-end nil)
+# #   (setq evil-move-cursor-back nil)
+# #   (evil-mode))
+# #+END_SRC
+
+* Spacemacs appearance
+#+BEGIN_SRC emacs-lisp
+(use-package spacemacs-theme
+  :ensure t
+  :init
+  (load-theme 'spacemacs-dark t)
+  (setq spacemacs-theme-org-agenda-height nil)
+  (setq spacemacs-theme-org-height nil))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; set sizes here to stop spacemacs theme resizing these
+(set-face-attribute 'org-level-1 nil :height 1.0)
+(set-face-attribute 'org-level-2 nil :height 1.0)
+(set-face-attribute 'org-level-3 nil :height 1.0)
+(set-face-attribute 'org-scheduled-today nil :height 1.0)
+(set-face-attribute 'org-agenda-date-today nil :height 1.1)
+(set-face-attribute 'org-table nil :foreground "#008787")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package spaceline
+  :demand t
+  :init
+  (setq powerline-default-separator 'arrow-fade)
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
+#+END_SRC
+
+* Productivity
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(global-nlinum-relative-mode)
+#+END_SRC
