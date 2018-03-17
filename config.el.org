@@ -5,42 +5,79 @@
 #+END_SRC
 
 * Packages
-# (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-# (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-
-# (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
-
 #+BEGIN_SRC emacs-lisp
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 #+END_SRC
 
+# (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+# (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 
-* Evil
-# #+BEGIN_SRC emacs-lisp
-# (use-package evil
-#   :demand)
-# #+END_SRC
+# (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 
+** Evil
+#+BEGIN_SRC emacs-lisp
+ (use-package evil
+   :ensure t
+   :config
+   ;; Make Evil's point behave more like Emacs'
+   (setq evil-want-change-word-to-end nil)
+   (setq evil-move-cursor-back nil)
+   (evil-mode))
+ #+END_SRC
 
-# #+BEGIN_SRC emacs-lisp
-# # (use-package evil
-# #   :ensure t
-# #   :config
-# #   ;; Make Evil's point behave more like Emacs'
-# #   (setq evil-want-change-word-to-end nil)
-# #   (setq evil-move-cursor-back nil)
-# #   (evil-mode))
-# #+END_SRC
+** Avy
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-:") 'avy-goto-char)
+#+END_SRC
+
+** Smex
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+  :ensure t
+  :bind
+  (("M-x" . smex)))
+#+END_SRC
+
+** auto-complete 
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-complete
+  :ensure t
+  :config
+  (ac-config-default)
+  (global-auto-complete-mode)) 
+#+END_SRC
+
+** guide-key
+#+BEGIN_SRC emacs-lisp
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
+(guide-key-mode 1)  ; Enable guide-key-mode
+#+END_SRC
+   
+** EXWM
+
+#+BEGIN_SRC emacs-lisp
+(use-package exwm
+:ensure t
+:config
+(require 'exwm-config)
+(exwm-config-default))
+#+END_SRC
+   
+** smartparens
+M-x smartparens-mode to toggle
+M-x sp-cheat-sheet shows available commands + usage examples
+#+BEGIN_SRC emacs-lisp
+(require 'smartparens-config)
+#+END_SRC
+
 
 * Spacemacs appearance
 #+BEGIN_SRC emacs-lisp
 (use-package spacemacs-theme
-  :ensure t
-  :init
-  (load-theme 'spacemacs-dark t)
-  (setq spacemacs-theme-org-agenda-height nil)
-  (setq spacemacs-theme-org-height nil))
+  :defer t
+  :init (load-theme 'spacemacs-dark t))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -67,4 +104,35 @@
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
 (global-nlinum-relative-mode)
+#+END_SRC
+
+** Time in modeline
+#+BEGIN_SRC emacs-lisp
+(display-time-mode 1)
+#+END_SRC
+
+* Miscellaneous 
+** Match parenthesis
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+#+END_SRC
+
+** attempt to autocomplete with tab
+#+BEGIN_SRC emacs-lisp
+(setq tab-always-indent 'complete)
+#+END_SRC
+
+** for emacsclient
+#+BEGIN_SRC emacs-lisp
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+#+END_SRC
+
+** recents
+#+BEGIN_SRC emacs-lisp
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
 #+END_SRC

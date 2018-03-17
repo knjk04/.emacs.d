@@ -1,0 +1,22 @@
+
+;; ----- smex-history -----
+(
+ package-install
+ helm-recentf
+ customize-themes
+ eval-current-buffer
+ load-file
+ eval-buffer
+ exwm-layout-set-fullscreen
+)
+
+;; ----- smex-data -----
+(
+ (package-install . 9)
+ (load-file . 3)
+ (exwm-layout-set-fullscreen . 1)
+ (eval-buffer . 2)
+ (eval-current-buffer . 1)
+ (customize-themes . 1)
+ (helm-recentf . 1)
+)
