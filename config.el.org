@@ -27,11 +27,13 @@
   (ac-config-default)
   (global-auto-complete-mode)) 
 #+END_SRC
+   
+** dashboard
 
 #+BEGIN_SRC emacs-lisp
-(use-package dashboard
-    :config
-    (dashboard-setup-startup-hook))
+;(use-package dashboard
+;    :config
+;    (dashboard-setup-startup-hook))
 #+END_SRC
 
 ** avy 
@@ -166,8 +168,9 @@ E.g. cs)]
 #+END_SRC
    
 ** fancy-battery
+Doesn't show battery percentage, only time remaining
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook #'fancy-battery-mode)
+;(add-hook 'after-init-hook #'fancy-battery-mode)
 #+END_SRC
 
 ** guide-key
@@ -183,9 +186,17 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 (use-package helm
 :bind (:map evil-normal-state-map
 ;using ido instead for find-files
-("SPC f" . helm-find-files)
-("SPC r" . helm-recentf)))
+("SPC f" . ido-find-file) ;; this should be in the ido section
+))
+;("SPC r" . helm-recentf)))
 (require 'helm-config)
+#+END_SRC
+
+** hlinum-mode
+Doesn't work   
+#+BEGIN_SRC emacs-lisp
+;(require 'hlinum)
+;(hlinum-activate)
 #+END_SRC
    
 ** ido
@@ -233,13 +244,17 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 #+END_SRC
    
 ** paredit
-   
 #+BEGIN_SRC emacs-lisp
 (use-package paredit
   :ensure t
   :config
   (add-hook 'evil-cleverparens-mode-hook #'enable-paredit-mode))
 (add-hook 'prog-mode-hook #'paredit-mode)
+#+END_SRC
+   
+** powerline-evil
+#+BEGIN_SRC emacs-lisp
+;(require 'powerline-evil)
 #+END_SRC
    
 ** rainbow-delimeters
@@ -269,9 +284,30 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 ;(sml/setup)
 #+END_SRC
 
-#+RESULTS:
+** solaire mode
+#+BEGIN_SRC emacs-lisp
+(require 'solaire-mode)
 
-   
+;; brighten buffers (that represent real files)
+(add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
+;; To enable solaire-mode unconditionally for certain modes:
+(add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
+
+;; ...if you use auto-revert-mode, this prevents solaire-mode from turning
+;; itself off every time Emacs reverts the file
+(add-hook 'after-revert-hook #'turn-on-solaire-mode)
+
+;; highlight the minibuffer when it is activated:
+(add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+
+;; if the bright and dark background colors are the wrong way around, use this
+;; to switch the backgrounds of the `default` and `solaire-default-face` faces.
+;; This should be used *after* you load the active theme!
+;;
+;; NOTE: This is necessary for themes in the doom-themes package!
+(solaire-mode-swap-bg)
+#+END_SRC
+
 ** which-key
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
@@ -282,9 +318,9 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 
 * Spacemacs appearance
 #+BEGIN_SRC emacs-lisp
-(use-package spacemacs-theme
-  :defer t
-  :init (load-theme 'spacemacs-dark t))
+;(use-package spacemacs-theme
+;  :defer t
+;  :init (load-theme 'spacemacs-dark t))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -298,31 +334,37 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package spaceline
-  :demand t
-  :init
+;(use-package spaceline
+;  :demand t
+;  :init
 ;  (setq powerline-default-separator 'arrow-fade)
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+;  :config
+;  (require 'spaceline-config)
+;  (spaceline-spacemacs-theme))
 #+END_SRC
 
 * Productivity
-
+** flyspell for comments in source code
 #+BEGIN_SRC emacs-lisp
-;(defun ido-my-keys ()(defun bind-ido-keys ()
-;  "Keybindings for ido mode."
-;  (define-key ido-completion-map (kbd "<down>") 'ido-next-match) 
-;  (define-key ido-completion-map (kbd "<up>")   'ido-prev-match))
-;
-;(add-hook 'ido-setup-hook #'bind-ido-keys)
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (flyspell-prog-mode)
+            ; ...
+          ))
 #+END_SRC
-  
-
-** Quickly access (this) config file (not yet functioning)
+   
+** ido recent files
 #+BEGIN_SRC emacs-lisp
-;;(defun init-file ()
-;;(if (eq system-type 'windows-nt)
+(require 'recentf)
+
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to find a recent file."
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
+
+(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
 #+END_SRC
 
 ** Line numbers
@@ -330,15 +372,32 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 (global-nlinum-relative-mode)
 #+END_SRC
 
+** Quickly access (this) config file (not yet functioning)
+#+BEGIN_SRC emacs-lisp
+;;(defun init-file ()
+;;(if (eq system-type 'windows-nt)
+#+END_SRC
+
+
 ** Time in modeline
 #+BEGIN_SRC emacs-lisp
-(display-time-mode 1)
+;display-time-mode 1)
 #+END_SRC
 
 * Miscellaneous 
 ** attempt to autocomplete with tab
 #+BEGIN_SRC emacs-lisp
 (setq tab-always-indent 'complete)
+#+END_SRC
+
+** dashboard
+#+BEGIN_SRC emacs-lisp
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+;; Or if you use use-package
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
 #+END_SRC
 
 ** disable menubars
@@ -363,6 +422,37 @@ Bound SPC f to helm-find-files, and SPC r to helm-recentf - spacemacs style!
 (unless (server-running-p)
   (server-start))
 #+END_SRC
+
+** hide modeline
+#+BEGIN_SRC emacs-lisp
+(defvar-local hidden-mode-line-mode nil)
+
+(define-minor-mode hidden-mode-line-mode
+  "Minor mode to hide the mode-line in the current buffer."
+  :init-value nil
+  :global t
+  :variable hidden-mode-line-mode
+  :group 'editing-basics
+  (if hidden-mode-line-mode
+      (setq hide-mode-line mode-line-format
+            mode-line-format nil)
+    (setq mode-line-format hide-mode-line
+          hide-mode-line nil))
+  (force-mode-line-update)
+  ;; Apparently force-mode-line-update is not always enough to
+  ;; redisplay the mode-line
+  (redraw-display)
+  (when (and (called-interactively-p 'interactive)
+             hidden-mode-line-mode)
+    (run-with-idle-timer
+     0 nil 'message
+     (concat "Hidden Mode Line Mode enabled.  "
+             "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+
+;; If you want to hide the mode-line in every buffer by default
+(add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+#+END_SRC
+
 
 ** Match parenthesis
 #+BEGIN_SRC emacs-lisp

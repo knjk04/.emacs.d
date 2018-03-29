@@ -4,3 +4,10 @@ elpa/
 abbrev_defs
 ac-comhist.dat
 *.~
+#init.el#
+ido.last
+network-security.data
+*.el
+recentf
+smex-items
+tramp
