@@ -3,7 +3,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 #+END_SRC
-
+  
 ** aggressive-indent
 #+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
@@ -317,34 +317,24 @@ Doesn't work
     (which-key-mode))
 #+END_SRC
 
-* Spacemacs appearance
+** wttrin.el (weather package)
 #+BEGIN_SRC emacs-lisp
-;(use-package spacemacs-theme
-;  :defer t
-;  :init (load-theme 'spacemacs-dark t))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;; set sizes here to stop spacemacs theme resizing these
-(set-face-attribute 'org-level-1 nil :height 1.0)
-(set-face-attribute 'org-level-2 nil :height 1.0)
-(set-face-attribute 'org-level-3 nil :height 1.0)
-(set-face-attribute 'org-scheduled-today nil :height 1.0)
-(set-face-attribute 'org-agenda-date-today nil :height 1.1)
-(set-face-attribute 'org-table nil :foreground "#008787")
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-;(use-package spaceline
-;  :demand t
-;  :init
-;  (setq powerline-default-separator 'arrow-fade)
-;  :config
-;  (require 'spaceline-config)
-;  (spaceline-spacemacs-theme))
+;; weather from wttr.in
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :init
+  (setq wttrin-default-accept-language '("Accept-Language" . "en-GB"))
+  (setq wttrin-default-cities '("Nottingham"
+                                "London")))
 #+END_SRC
 
 * Productivity
+** company 
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 'global-company-mode)
+#+END_SRC
+
 ** flyspell for comments in source code
 #+BEGIN_SRC emacs-lisp
 (add-hook 'c++-mode-hook
@@ -375,6 +365,12 @@ Doesn't work
 
 ** Quickly access (this) config file (not yet functioning)
 #+BEGIN_SRC emacs-lisp
+;(defun find-user-init-file ()
+;  "Edit the `user-init-file', in another window."
+;  (interactive)
+;  (find-file-other-window user-init-file))
+;(global-set-key (kbd "C-c I") 'find-user-init-file)
+
 ;;(defun init-file ()
 ;;(if (eq system-type 'windows-nt)
 #+END_SRC
@@ -389,6 +385,12 @@ Doesn't work
 #+BEGIN_SRC emacs-lisp
 (setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
+
+** 'yes' or 'no' -> 'y' or 'n'
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
 
 * Miscellaneous 
 ** attempt to autocomplete with tab
