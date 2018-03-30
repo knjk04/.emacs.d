@@ -217,10 +217,11 @@ Doesn't work
 
 ** intero
 #+BEGIN_SRC emacs-lisp
-;(package-install 'intero)
-;(add-hook 'haskell-mode-hook 'intero-mode)
+(package-install 'intero)
+(add-hook 'haskell-mode-hook 'intero-mode)
 #+END_SRC
 
+** multiple cursors
 #+BEGIN_SRC emacs-lisp
 (require 'multiple-cursors)
 ;;for when there is an active region that goes across multiple lines, the below adds a cursor to every line
@@ -378,10 +379,15 @@ Doesn't work
 ;;(if (eq system-type 'windows-nt)
 #+END_SRC
 
-
 ** Time in modeline
 #+BEGIN_SRC emacs-lisp
 ;display-time-mode 1)
+#+END_SRC
+   
+** warn before closing emacs
+   Definitely deserving its place under productivity. Why would I want to close emacs?!
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
 
 * Miscellaneous 

@@ -1,13 +1,6 @@
-auto-save-list/
-evil/
-elpa/
-abbrev_defs
-ac-comhist.dat
-*.~
-#init.el#
-ido.last
-network-security.data
-*.el
-recentf
-smex-items
-tramp
+# Ignore everything by default
+/*
+
+# Un-ignore following:
+config.el.org
+README.org
