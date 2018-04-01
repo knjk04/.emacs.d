@@ -2,3 +2,35 @@
 
 My personal emacs config and config related file
 
+* TODO 
+** packages to get/start using (alphabetical order) [0%]
+- [ ] CTags
+- [ ] eclim
+- [ ] Erc
+- [ ] Exwm - installed but not using 
+- [ ] Google this!
+- [ ] Google translate
+- [ ] Gnus
+- [ ] Hydras
+- [ ] IDO recents
+- [ ] Magit - installed but not using much
+- [ ] Modeline package
+- [ ] Pandoc
+- [ ] PDF tools - vim keybindings
+- [ ] Pretty symbols
+- [ ] Projectile
+- [ ] Reveal.js
+- [ ] Tramp
+  
+** issues to fix [0%]
+- [ ] Fix problem in literate haskell scripts where hitting enter adds a space between two characters on the line(s) below 
+- [ ] Increase width between line numbers and the leftmost column of the editor
+- [ ] Flyspell for comments only
+- [ ] Wttrin - fix formatting and have this on dashboard 
+- [ ] Limit size of images shown in org files
+- [ ] Org google material design presentations 
+- [ ] Emacs on chrome
+
+** general todo for this repo [0%]
+- [ ] Add TOC to config
+- [ ] Have org files automatically backup to Google Drive

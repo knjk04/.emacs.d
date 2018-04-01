@@ -3,7 +3,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 #+END_SRC
-  
+
 ** aggressive-indent
 #+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
@@ -28,8 +28,20 @@
   (global-auto-complete-mode)) 
 #+END_SRC
    
-** dashboard
+** column enforce mode
+subtly tells you which characters infringe upon the 80 char limit
+#+BEGIN_SRC emacs-lisp
+(use-package column-enforce-mode
+  :ensure t
+  :diminish column-enforce-mode
+  :init
+  (setq column-enforce-column 99)
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'column-enforce-mode)))
+#+END_SRC
 
+** dashboard
 #+BEGIN_SRC emacs-lisp
 ;(use-package dashboard
 ;    :config
@@ -161,7 +173,6 @@ E.g. cs)]
 (exwm-systemtray-enable)
 
 #+END_SRC
-
 ** eyebrowse
 #+BEGIN_SRC emacs-lisp
 ; (eye-browse-mode t)
@@ -220,7 +231,7 @@ Doesn't work
 (package-install 'intero)
 (add-hook 'haskell-mode-hook 'intero-mode)
 #+END_SRC
-
+   
 ** multiple cursors
 #+BEGIN_SRC emacs-lisp
 (require 'multiple-cursors)
@@ -233,6 +244,31 @@ Doesn't work
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 #+END_SRC
 
+** neotree
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :ensure t
+  :bind* (("M-m SPC n". neotree-toggle))
+  :init
+  (setq neo-smart-open t))
+
+;; which key modal explanation - taken from sriramkswamy
+(which-key-add-key-based-replacements
+  "SPC n" "directory tree")
+#+END_SRC
+   
+** org
+source code highlighting
+#+BEGIN_SRC emacs-lisp
+;(setq org-src-fontify-natively t
+;      org-src-tab-acts-natively t)
+#+END_SRC
+
+Restrict image width
+#+BEGIN_SRC emacs-lisp
+(setq org-image-actual-width '(300))
+#+END_SRC
+
 ** org bullets
 #+BEGIN_SRC emacs-lisp
 (use-package org-bullets
@@ -242,6 +278,24 @@ Doesn't work
   '("◉" "◎" "￼" "○" "►" "◇"))
  :config
  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
+** org-ioslide
+Doesn't work
+#+BEGIN_SRC emacs-lisp
+(require 'ox-ioslide)
+#+END_SRC
+
+** oxtbs
+org to twitter bootstrap
+#+BEGIN_SRC emacs-lisp
+(setq org-publish-project-alist
+      '(("org-notes"
+         :base-directory "~/org/"
+         :publishing-directory "~/public_html/"
+         :publishing-function org-twbs-publish-to-html
+         :with-sub-superscript nil
+         )))
 #+END_SRC
    
 ** paredit
@@ -262,6 +316,20 @@ Doesn't work
 #+BEGIN_SRC emacs-lisp
 ;;start the mode automatically in most programming modes (requires Emacs 24+)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+#+END_SRC
+   
+** restart emacs
+#+BEGIN_SRC emacs-lisp
+(use-package restart-emacs
+  :ensure t
+  :bind* (("C-x M-c" . restart-emacs)))
+#+END_SRC
+
+** shrink white space
+#+BEGIN_SRC emacs-lisp
+(use-package shrink-whitespace
+  :ensure t
+  :bind* (("M-m g SPC" . shrink-whitespace)))
 #+END_SRC
 
 ** smartparens
@@ -317,6 +385,13 @@ Doesn't work
     (which-key-mode))
 #+END_SRC
 
+** writegood
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "path/to/writegood-mode")
+(require 'writegood-mode)
+(global-set-key "\C-cg" 'writegood-mode)
+#+END_SRC
+
 ** wttrin.el (weather package)
 #+BEGIN_SRC emacs-lisp
 ;; weather from wttr.in
@@ -328,7 +403,7 @@ Doesn't work
   (setq wttrin-default-cities '("Nottingham"
                                 "London")))
 #+END_SRC
-
+   
 * Productivity
 ** company 
 #+BEGIN_SRC emacs-lisp
