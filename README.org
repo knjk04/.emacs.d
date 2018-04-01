@@ -1,8 +1,7 @@
 #+TITLE: emacs.d
 
-My personal emacs config and config related file
+My personal emacs config and config related files
 
-* TODO 
 ** packages to get/start using (alphabetical order) [0%]
 - [ ] CTags
 - [ ] eclim
@@ -30,7 +29,9 @@ My personal emacs config and config related file
 - [ ] Limit size of images shown in org files
 - [ ] Org google material design presentations 
 - [ ] Emacs on chrome
+- [ ] Decrease size of the biggest (level 0?) org bullet 
 
 ** general todo for this repo [0%]
 - [ ] Add TOC to config
+- [ ] Add TOC to README
 - [ ] Have org files automatically backup to Google Drive
