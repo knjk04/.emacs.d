@@ -22,7 +22,7 @@ My personal emacs config and config related files
 - [ ] Tramp
   
 ** issues to fix [0%]
-- [ ] Fix problem in literate haskell scripts where hitting enter adds a space between two characters on the line(s) below 
+- [ ] Aggressive indent mode in literate haskell scripts adds a space between two characters on the line(s) below -- just need to disable this in .lhs files 
 - [ ] Increase width between line numbers and the leftmost column of the editor
 - [ ] Flyspell for comments only
 - [ ] Wttrin - fix formatting and have this on dashboard 
