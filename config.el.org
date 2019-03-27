@@ -11,6 +11,8 @@
 
 ;;activate for programming modes
 (global-aggressive-indent-mode 1)
+(add-to-list 'aggressive-indent-excluded-modes 'haskell-mode)
+(add-to-list 'aggressive-indent-excluded-modes 'haskell-interactive-mode)
 (add-to-list 'aggressive-indent-excluded-modes 'html-mode) 
 #+END_SRC
    
@@ -90,20 +92,24 @@ subtly tells you which characters infringe upon the 80 char limit
 
 ** evil
 #+BEGIN_SRC emacs-lisp
-;(use-package evil
-;  :ensure t
-;  :config
-;  ;; Make Evil's point behave more like Emacs'
-;  (setq evil-want-change-word-to-end nil)
-;  (setq evil-move-cursor-back nil)
-;  (evil-mode))
+(use-package evil
+  :ensure t
+  :config
+  ;; Make Evil's point behave more like Emacs'
+  (setq evil-want-change-word-to-end nil)
+  (setq evil-move-cursor-back nil)
+  (evil-mode))
  #+END_SRC
    
 ** evil commentary
 #+BEGIN_SRC emacs-lisp
-;(evil-commentary-mode)
+(evil-commentary-mode)
 #+END_SRC
    
+** evil magit
+   #+BEGIN_SRC emacs-lisp
+   ; (require 'evil-magit)
+   #+END_SRC
 ** evil surround
 Usage (spaces for clarity): c s [object to change from - e.g. ')'] [object to change to - e.g. '}']
 E.g. cs)]
@@ -207,8 +213,8 @@ E.g. cs)]
   ;; enable systemtray
 ;  (require 'exwm-systemtray)
 ;  (exwm-systemtray-enable))
-
 #+END_SRC
+
 ** eyebrowse
 #+BEGIN_SRC emacs-lisp
 (eyebrowse-mode t)
@@ -245,7 +251,7 @@ Doesn't work
 ;(require 'hlinum)
 ;(hlinum-activate)
 #+END_SRC
-   
+
 ** ido
 #+BEGIN_SRC emacs-lisp
 (setq ido-enable-flex-matching t)
@@ -267,7 +273,35 @@ Doesn't work
 (package-install 'intero)
 (add-hook 'haskell-mode-hook 'intero-mode)
 #+END_SRC
-   
+
+** magit   
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+** markdown-mode
+#+BEGIN_SRC
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+
+** minted
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+(setq org-src-fontify-natively t)
+#+END_SRC
+
 ** multiple cursors
 #+BEGIN_SRC emacs-lisp
 (require 'multiple-cursors)
@@ -369,6 +403,10 @@ org to twitter bootstrap
 (add-hook 'prog-mode-hook #'paredit-mode)
 #+END_SRC
    
+** pdftools
+#+BEGIN_SRC emacs-lisp
+(pdf-loader-install)
+#+END_SRC
 ** powerline-evil
 #+BEGIN_SRC emacs-lisp
 ;(require 'powerline-evil)
@@ -493,7 +531,7 @@ org to twitter bootstrap
             ; ...
           ))
 #+END_SRC
-   
+
 ** ido recent files
 #+BEGIN_SRC emacs-lisp
 (require 'recentf)
@@ -530,7 +568,7 @@ org to twitter bootstrap
 (display-time-mode 1)
 ;(setq display-time-format "%I:%M:%S")
 #+END_SRC
-   
+
 ** warn before closing emacs
    Definitely deserving its place under productivity. Why would I want to close emacs?!
 #+BEGIN_SRC emacs-lisp
@@ -542,11 +580,21 @@ org to twitter bootstrap
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-
 * Miscellaneous 
 ** attempt to autocomplete with tab
 #+BEGIN_SRC emacs-lisp
 (setq tab-always-indent 'complete)
+#+END_SRC
+
+** put backup files in a dedicated directory
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 20   ; how many of the newest versions to keep
+  kept-old-versions 5    ; and how many of the old
+  )
 #+END_SRC
 
 ** dashboard
@@ -557,12 +605,6 @@ org to twitter bootstrap
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
-#+END_SRC
-
-** disable menubars
-#+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1)
-(tool-bar-mode -1)
 #+END_SRC
 
 ** disable scrollbar
@@ -583,6 +625,10 @@ org to twitter bootstrap
   (server-start))
 #+END_SRC
 
+** grammar check
+   #+BEGIN_SRC emacs-lisp
+   (setq ispell-program-name "/usr/bin/ispell")
+   #+END_SRC
 ** hide modeline
 #+BEGIN_SRC emacs-lisp
 ;(defvar-local hidden-mode-line-mode nil)
@@ -619,9 +665,17 @@ org to twitter bootstrap
 (setq nlinum-format " %d")
 #+END_SRC
 
+** lorem ipsum
+   For when I need to quickly add some placeholder text
+   #+BEGIN_SRC emacs-lisp
+   (require 'lorem-ipsum)
+   #+END_SRC
 ** projectile
 #+BEGIN_SRC emacs-lisp
-(projectile-global-mode)
+;(projectile-global-mode)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 #+END_SRC
 
 ** Match parenthesis
@@ -1005,7 +1059,28 @@ org to twitter bootstrap
 ;;; core-modeline.el ends here
 #+END_SRC
 
-** doom modeline
+** Turn off menu bar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1)
+#+END_SRC
+
+** Turn off tool bar
+#+BEGIN_SRC emacs-lisp
+    (tool-bar-mode -1)
+#+END_SRC
+
+** Turn off visual bell
+#+BEGIN_SRC emacs-lisp
+ (setq visible-bell 1)
+#+END_SRC
+
+** UTF-8
+   #+BEGIN_SRC emacs-lisp
+   (set-language-environment "UTF-8")
+   (set-default-coding-systems 'utf-8)
+   #+END_SRC
+
+* doom modeline
 #+BEGIN_SRC emacs-lisp
    ;;; ui/doom-modeline/config.el -*- lexical-binding: t; -*-
 
@@ -1639,4 +1714,28 @@ org to twitter bootstrap
 ;(add-hook 'image-mode-hook   #'+doom-modeline|set-media-modeline)
 ;(add-hook 'org-src-mode-hook #'+doom-modeline|set-special-modeline)
 ;(add-hook 'circe-mode-hook   #'+doom-modeline|set-special-modeline)
+#+END_SRC
+
+* Themes
+#+BEGIN_SRC emacs-lisp
+(require 'doom-themes)
+
+;; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+;; may have their own settings.
+(load-theme 'doom-one t)
+
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+
+;; Enable custom neotree theme (all-the-icons must be installed!)
+(doom-themes-neotree-config)
+;; or for treemacs users
+(doom-themes-treemacs-config)
+
+;; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
 #+END_SRC
