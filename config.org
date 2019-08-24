@@ -6,52 +6,6 @@ Inspired by https://github.com/larstvei/dot-emacs/blob/master/init.org
   (package-install 'use-package))
 #+END_SRC
 
-** Download if not installed
-#+BEGIN_SRC emacs-lisp
-(let* ((package--builtins nil)
-       (packages
-        '(auto-compile         ; automatically compile Emacs Lisp libraries
-          company              ; Modular text completion framework
-          define-word          ; display the definition of word at point
-          diminish             ; Diminished modes from modeline
-	  doom-themes          ; themes inspired by Doom emacs
-          drag-stuff           ; Drag stuff around in Emacs
-          focus                ; Dim colour of text in surrounding sections
-          idle-require         ; load elisp libraries while Emacs is idle
-          git-gutter-fringe    ; Fringe version of git-gutter.el
-          golden-ratio         ; Automatic resizing windows to golden ratio
-          haskell-mode         ; A Haskell editing mode
-          helm                 ; Incremental and narrowing framework
-          helm-ag              ; the silver searcher with helm interface
-          helm-company         ; Helm interface for company-mode
-          helm-dash            ; Offline documentation using Dash docsets.
-          helm-projectile      ; Helm integration for Projectile
-          helm-swoop           ; Efficiently hopping squeezed lines
-          magit                ; control Git from Emacs
-          markdown-mode        ; Emacs Major mode for Markdown-formatted files
-          olivetti             ; Minor mode for a nice writing environment
-          org                  ; Outline-based notes management and organizer
-          org-ref              ; citations bibliographies in org-mode
-          paredit              ; minor mode for editing parentheses
-          pdf-tools            ; Emacs support library for PDF files
-          projectile           ; Manage and navigate projects in Emacs easily
-	  rainbow-delimeters   ; use colours to show matching parenthesis
-	  shrink-whitespace
-          try                  ; Try out Emacs packages
-          which-key)))         ; Display available keybindings in popup
-  (ignore-errors ;; This package is only relevant for Mac OS X.
-    (when (memq window-system '(mac ns))
-      (push 'exec-path-from-shell packages)
-      (push 'reveal-in-osx-finder packages))
-    (let ((packages (remove-if 'package-installed-p packages)))
-      (when packages
-        ;; Install uninstalled packages
-        (package-refresh-contents)
-        (mapc 'package-install packages)))))
-#+END_SRC
-
-
-
 ** anzu
 Shows the total number of matches of a search 
 #+BEGIN_SRC emacs-lisp
@@ -128,22 +82,6 @@ Port of vim's commentary plugin
 (package-install 'intero)
 (add-hook 'haskell-mode-hook 'intero-mode)
 #+END_SRC
-#+BEGIN_SRC emacs-lisp
-(use-package telephone-line
-  :ensure t
-  :config
-  (setq telephone-line-primary-right-separator 'telephone-line-abs-left
-        telephone-line-secondary-right-separator 'telephone-line-abs-hollow-left)
-  (setq telephone-line-height 30
-        telephone-line-evil-use-short-tag t)
-  (telephone-line-mode 1)
-  )
-
-(setq battery-mode-line-format "  %p%% %t  ")
-(setq display-time-default-load-average nil)
-(display-battery-mode 1)
-(display-time-mode 1)
-#+END_SRC
 ** rainbow delimeters
 #+BEGIN_SRC emacs-lisp
 ;;start the mode automatically in most programming modes (requires Emacs 24+)
@@ -195,7 +133,6 @@ To prevent accidentally closing emacs (happens to me all the time in i3wm)
 (setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
 
-
 * Miscellaneous
 
 ** Match parenthesis
@@ -221,6 +158,11 @@ Useful when in fullscreen mode in i3wm
 (display-time-mode 1)
 ;(setq display-time-format "%I:%M:%S")
 #+END_SRC
+
+** 'yes' or 'no'
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC 
 
 * Visual
 ** dashboard
@@ -251,8 +193,46 @@ Useful when in fullscreen mode in i3wm
                                ))
        (dashboard-setup-startup-hook))
 #+END_SRC emacs-lisp
-** modeline
+** icon set
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons)
+#+END_SRC 
+
+** telephone modeline
+#+BEGIN_SRC emacs-lisp
+;(use-package telephone-line
+;  :ensure t
+;  :config
+;  (setq telephone-line-primary-right-separator 'telephone-line-abs-left
+;        telephone-line-secondary-right-separator 'telephone-line-abs-hollow-left)
+;  (setq telephone-line-height 30
+;        telephone-line-evil-use-short-tag t)
+;  (telephone-line-mode 1)
+;  )
+;
+;(setq battery-mode-line-format "  %p%% %t  ")
+;(setq display-time-default-load-average nil)
+;; (display-battery-mode 1) -- not for desktop
+;(display-time-mode 1)
+#+END_SRC 
+
 ** Doom modeline
+#+BEGIN_SRC emacs-lisp
+(use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode))
+
+;; Whether display the icon for major mode. It respects `doom-modeline-icon'.
+(setq doom-modeline-major-mode-icon t)
+
+;; Whether display color icons for `major-mode'. It respects
+;; `doom-modeline-icon' and `all-the-icons-color-icons'.
+(setq doom-modeline-major-mode-color-icon t)
+
+;; The maximum displayed length of the branch name of version control.
+(setq doom-modeline-vcs-max-length 12)
+#+END_SRC 
+
 ** Doom themes  
 #+BEGIN_SRC emacs-lisp
 (require 'doom-themes)
@@ -277,3 +257,7 @@ Useful when in fullscreen mode in i3wm
 (doom-themes-org-config)
 #+END_SRC
 
+** icon set
+#+BEGIN_SRC emacs-lisp
+(require 'all-the-icons)
+#+END_SRC
