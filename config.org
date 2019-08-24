@@ -1,0 +1,279 @@
+Inspired by https://github.com/larstvei/dot-emacs/blob/master/init.org
+
+* Packages
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+#+END_SRC
+
+** Download if not installed
+#+BEGIN_SRC emacs-lisp
+(let* ((package--builtins nil)
+       (packages
+        '(auto-compile         ; automatically compile Emacs Lisp libraries
+          company              ; Modular text completion framework
+          define-word          ; display the definition of word at point
+          diminish             ; Diminished modes from modeline
+	  doom-themes          ; themes inspired by Doom emacs
+          drag-stuff           ; Drag stuff around in Emacs
+          focus                ; Dim colour of text in surrounding sections
+          idle-require         ; load elisp libraries while Emacs is idle
+          git-gutter-fringe    ; Fringe version of git-gutter.el
+          golden-ratio         ; Automatic resizing windows to golden ratio
+          haskell-mode         ; A Haskell editing mode
+          helm                 ; Incremental and narrowing framework
+          helm-ag              ; the silver searcher with helm interface
+          helm-company         ; Helm interface for company-mode
+          helm-dash            ; Offline documentation using Dash docsets.
+          helm-projectile      ; Helm integration for Projectile
+          helm-swoop           ; Efficiently hopping squeezed lines
+          magit                ; control Git from Emacs
+          markdown-mode        ; Emacs Major mode for Markdown-formatted files
+          olivetti             ; Minor mode for a nice writing environment
+          org                  ; Outline-based notes management and organizer
+          org-ref              ; citations bibliographies in org-mode
+          paredit              ; minor mode for editing parentheses
+          pdf-tools            ; Emacs support library for PDF files
+          projectile           ; Manage and navigate projects in Emacs easily
+	  rainbow-delimeters   ; use colours to show matching parenthesis
+	  shrink-whitespace
+          try                  ; Try out Emacs packages
+          which-key)))         ; Display available keybindings in popup
+  (ignore-errors ;; This package is only relevant for Mac OS X.
+    (when (memq window-system '(mac ns))
+      (push 'exec-path-from-shell packages)
+      (push 'reveal-in-osx-finder packages))
+    (let ((packages (remove-if 'package-installed-p packages)))
+      (when packages
+        ;; Install uninstalled packages
+        (package-refresh-contents)
+        (mapc 'package-install packages)))))
+#+END_SRC
+
+
+
+** anzu
+Shows the total number of matches of a search 
+#+BEGIN_SRC emacs-lisp
+(global-anzu-mode +1)
+#+END_SRC
+** column enforce mode
+subtly tells you which characters infringe upon the 80 char limit
+#+BEGIN_SRC emacs-lisp
+(use-package column-enforce-mode
+  :ensure t
+  :diminish column-enforce-mode
+  :init
+  (setq column-enforce-column 99)
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'column-enforce-mode)))
+#+END_SRC
+** evil
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :config
+  ;; Make Evil's point behave more like Emacs'
+  (setq evil-want-change-word-to-end nil)
+  (setq evil-move-cursor-back nil)
+  (evil-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+;("SPC f" . ido-find-file)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'ido-vertical-mode)
+(ido-mode 1)
+(ido-vertical-mode 1)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+ :ensure t
+ :init
+ (setq org-bullets-bullet-list
+  '("◉" "◎" "￼" "○" "►" "◇"))
+ :config
+ (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ 
+(custom-set-faces
+  '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+  '(org-level-4 ((t (:inherit outline-4 :height 0.9))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.8))))
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package restart-emacs
+  :ensure t
+  :bind* (("C-x M-c" . restart-emacs)))
+#+END_SRC
+
+** evil commentary
+Port of vim's commentary plugin
+#+BEGIN_SRC emacs-lisp
+(evil-commentary-mode)
+#+END_SRC
+** intero
+#+BEGIN_SRC emacs-lisp
+(package-install 'intero)
+(add-hook 'haskell-mode-hook 'intero-mode)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package telephone-line
+  :ensure t
+  :config
+  (setq telephone-line-primary-right-separator 'telephone-line-abs-left
+        telephone-line-secondary-right-separator 'telephone-line-abs-hollow-left)
+  (setq telephone-line-height 30
+        telephone-line-evil-use-short-tag t)
+  (telephone-line-mode 1)
+  )
+
+(setq battery-mode-line-format "  %p%% %t  ")
+(setq display-time-default-load-average nil)
+(display-battery-mode 1)
+(display-time-mode 1)
+#+END_SRC
+** rainbow delimeters
+#+BEGIN_SRC emacs-lisp
+;;start the mode automatically in most programming modes (requires Emacs 24+)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+#+END_SRC
+** shrink whitespace
+#+BEGIN_SRC emacs-lisp
+(use-package shrink-whitespace
+  :ensure t
+  :bind* (("M-m g SPC" . shrink-whitespace)))
+#+END_SRC
+** smex
+M-x autocompletion using Ido
+
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+  :ensure t
+  :bind
+  (("M-x" . smex)))
+#+END_SRC
+* Modes
+*** TODO move more things into this section
+
+
+Make a list of modes that are enabled by default but are not useful and disable them
+#+BEGIN_SRC emacs-lisp
+(dolist (mode
+         '(tool-bar-mode                ; No toolbars, more room for text
+           scroll-bar-mode              ; No scroll bars either
+	   menu-bar-mode                ; No menu bar
+           blink-cursor-mode))          ; The blinking cursor gets old
+  (funcall mode 0))
+#+END_SRC
+
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+;(global-linum-relative-mode)
+
+; Temporary solution (not relative)
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+
+#+END_SRC
+
+* Productivity
+To prevent accidentally closing emacs (happens to me all the time in i3wm)  
+
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-emacs 'y-or-n-p)
+#+END_SRC
+
+
+* Miscellaneous
+
+** Match parenthesis
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+#+END_SRC
+
+** put backup files in a dedicated directory to prevent clutter
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+  backup-by-copying t    ; Don't delink hardlinks
+  version-control t      ; Use version numbers on backups
+  delete-old-versions t  ; Automatically delete excess backups
+  kept-new-versions 20   ; how many of the newest versions to keep
+  kept-old-versions 5    ; and how many of the old
+  )
+#+END_SRC
+
+** Time in modeline
+Useful when in fullscreen mode in i3wm
+#+BEGIN_SRC emacs-lisp
+(display-time-mode 1)
+;(setq display-time-format "%I:%M:%S")
+#+END_SRC
+
+* Visual
+** dashboard
+#+BEGIN_SRC emacs-lisp
+(defun red/dashboard-banner ()
+       """Set a dashboard banner including information on package init time and garbage collections."""
+       (setq dashboard-banner-logo-title
+             (format "Emacs ready in %.2f seconds with %d garbage collections."
+                     (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
+
+     (use-package dashboard
+       :ensure t
+       :init
+       (add-hook 'after-init-hook 'dashboard-refresh-buffer)
+       (add-hook 'dashboard-mode-hook 'red/dashboard-banner)
+       :config
+       (dashboard-setup-startup-hook)
+       ;;(setq dashboard-banner-logo-title "If Brute force doesn't solve your problem, You aren't using enough")
+       (setq dashboard-startup-banner "~/.emacs.d/logo_small.png")
+
+
+       (defun dashboard-insert-space ()
+         (insert ""))
+
+       (setq dashboard-items '((recents . 10)
+                               ;;(projects . 5)
+                               ;;(agenda . 5)
+                               ))
+       (dashboard-setup-startup-hook))
+#+END_SRC emacs-lisp
+** modeline
+** Doom modeline
+** Doom themes  
+#+BEGIN_SRC emacs-lisp
+(require 'doom-themes)
+
+;; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+;; may have their own settings.
+(load-theme 'doom-one t)
+
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+
+;; Enable custom neotree theme (all-the-icons must be installed!)
+(doom-themes-neotree-config)
+;; or for treemacs users
+(doom-themes-treemacs-config)
+
+;; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+#+END_SRC
+
