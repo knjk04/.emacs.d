@@ -135,6 +135,7 @@ To prevent accidentally closing emacs (happens to me all the time in i3wm)
 
 * Miscellaneous
 
+
 ** Match parenthesis
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode 1)
